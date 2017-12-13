@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        PYPI_URL = 'https://pypi.cherubits.hu/simple/lantz/'
         PYTHON_EXECUTABLE = '/usr/bin/python3.4'
         VIRTUAL_ENVIRONMENT_DIRECTORY = 'env'
         ENVIRONMENT_STAGING = 'staging'
@@ -60,7 +61,7 @@ pipeline {
                 '''
                 sh '''git push origin ${GIT_BRANCH}
                 '''
-                slackSend color: 'good', message: "$JOB_NAME $env.BUILD_NUMBER published a new version (<$BUILD_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
+                slackSend color: 'good', message: "$JOB_NAME $env.BUILD_NUMBER published a new version (<$PYPI_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
             }
         }
         stage('Distribute') {
