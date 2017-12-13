@@ -1,10 +1,9 @@
 pipeline {
     agent any
     environment {
+        PYPI_URL = 'https://pypi.cherubits.hu/simple/lantz/'
         PYTHON_EXECUTABLE = '/usr/bin/python3.4'
         VIRTUAL_ENVIRONMENT_DIRECTORY = 'env'
-        DOTENV_CONFIGURATION_FILE = '.env'
-        DOTENV_CONFIGURATION_TEMPLATE = 'env.template'
         ENVIRONMENT_STAGING = 'staging'
         EXTRA_INDEX_URL = 'https://pypi.cherubits.hu'
         SUDO_PASSWORD = 'Armageddon0'
@@ -14,7 +13,7 @@ pipeline {
         stage('Initialize') {
             steps {
                 slackSend color: 'good', message: "$JOB_NAME started new build $env.BUILD_NUMBER (<$BUILD_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
-                git([url: 'git@github.com:lordoftheflies/kryten-worksheet.git', branch: "$GIT_BRANCH", changelog: true, credentialsId: 'jenkins-private-key', poll: true])
+                git([url: "${GIT_URL}", branch: "$GIT_BRANCH", changelog: true, credentialsId: 'jenkins-private-key', poll: true])
             }
         }
 
@@ -32,7 +31,7 @@ pipeline {
             steps {
                 echo 'Install requirements'
                 sh '''. ./env/bin/activate
-                    pip install -r requirements-full.txt --extra-index-url=$EXTRA_INDEX_URL
+                    pip install -r ./requirements-full.txt --extra-index-url=$EXTRA_INDEX_URL
                     deactivate
                 '''
             }
@@ -56,13 +55,13 @@ pipeline {
                 '''
                 echo 'Update version'
                 sh '''. ./env/bin/activate
-                    RC_VERSION=$(cat $DJANGO_PROJECT/version.py | grep "__version__ = " | sed 's/__version__ =//' | tr -d "'")
-                    bumpversion --allow-dirty --message 'Jenkins Build {$BUILD_NUMBER} bump version: {current_version} -> {new_version}' --commit --current-version $RC_VERSION patch $DJANGO_PROJECT/version.py
+                    RC_VERSION=$(cat lantz/version.py | grep "__version__ = " | sed 's/__version__ =//' | tr -d "'")
+                    bumpversion --allow-dirty --message 'Jenkins Build {$BUILD_NUMBER} bump version: {current_version} -> {new_version}' --commit --current-version $RC_VERSION patch lantz/version.py
                     deactivate
                 '''
                 sh '''git push origin ${GIT_BRANCH}
                 '''
-                slackSend color: 'good', message: "$JOB_NAME $env.BUILD_NUMBER published a new version (<$BUILD_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
+                slackSend color: 'good', message: "$JOB_NAME $env.BUILD_NUMBER published a new version (<$PYPI_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
             }
         }
         stage('Distribute') {

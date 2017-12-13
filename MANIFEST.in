@@ -10,6 +10,7 @@ include *.txt
 include .travis.yml
 recursive-include lantz *.c
 recursive-include lantz *.h
+recursive-include lantz *.ui
 
 global-exclude *.pyc *.pyo .DS_Store
 prune docs/_build
