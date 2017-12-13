@@ -54,8 +54,8 @@ pipeline {
                 '''
                 echo 'Update version'
                 sh '''. ./env/bin/activate
-                    RC_VERSION=$(cat version.py | grep "__version__ = " | sed 's/__version__ =//' | tr -d "'")
-                    bumpversion --allow-dirty --message 'Jenkins Build {$BUILD_NUMBER} bump version: {current_version} -> {new_version}' --commit --current-version $RC_VERSION patch version.py
+                    RC_VERSION=$(cat lantz/version.py | grep "__version__ = " | sed 's/__version__ =//' | tr -d "'")
+                    bumpversion --allow-dirty --message 'Jenkins Build {$BUILD_NUMBER} bump version: {current_version} -> {new_version}' --commit --current-version $RC_VERSION patch lantz/version.py
                     deactivate
                 '''
                 sh '''git push origin ${GIT_BRANCH}
