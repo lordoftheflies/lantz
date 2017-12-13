@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo 'Install requirements'
                 sh '''. ./env/bin/activate
-                    pip install -r requirements-full.txt --extra-index-url=$EXTRA_INDEX_URL
+                    pip install -r ./requirements-full.txt --extra-index-url=$EXTRA_INDEX_URL
                     deactivate
                 '''
             }
