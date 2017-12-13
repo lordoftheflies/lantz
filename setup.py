@@ -18,7 +18,7 @@ def read(filename):
     return codecs.open(filename, encoding='utf-8').read()
 
 
-long_description = '\n\n'.join([read('README'),
+long_description = '\n\n'.join([read('README.rst'),
                                 read('AUTHORS'),
                                 read('CHANGES')])
 
@@ -44,12 +44,6 @@ paths = os.listdir(folder)
 legacy_companies = [path for path in paths
                     if os.path.isdir(os.path.join(folder, path))
                     and os.path.exists(os.path.join(folder, path, '__init__.py'))]
-
-# ========================================
-# Readme
-# ========================================
-with open(os.path.join('.', 'README.rst')) as readme:
-    README = readme.read()
 
 # ========================================
 # Version parsing
