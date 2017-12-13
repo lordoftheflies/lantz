@@ -49,7 +49,7 @@ legacy_companies = [path for path in paths
 # Version parsing
 # ========================================
 main_ns = {}
-ver_path = convert_path('version.py')
+ver_path = convert_path('lantz/version.py')
 with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
