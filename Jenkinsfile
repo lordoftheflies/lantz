@@ -3,8 +3,6 @@ pipeline {
     environment {
         PYTHON_EXECUTABLE = '/usr/bin/python3.4'
         VIRTUAL_ENVIRONMENT_DIRECTORY = 'env'
-        DOTENV_CONFIGURATION_FILE = '.env'
-        DOTENV_CONFIGURATION_TEMPLATE = 'env.template'
         ENVIRONMENT_STAGING = 'staging'
         EXTRA_INDEX_URL = 'https://pypi.cherubits.hu'
         SUDO_PASSWORD = 'Armageddon0'
@@ -14,7 +12,7 @@ pipeline {
         stage('Initialize') {
             steps {
                 slackSend color: 'good', message: "$JOB_NAME started new build $env.BUILD_NUMBER (<$BUILD_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
-                git([url: 'git@github.com:lordoftheflies/kryten-worksheet.git', branch: "$GIT_BRANCH", changelog: true, credentialsId: 'jenkins-private-key', poll: true])
+                git([url: '${GIT_URL}', branch: '$GIT_BRANCH', changelog: true, credentialsId: 'jenkins-private-key', poll: true])
             }
         }
 
