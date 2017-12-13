@@ -12,7 +12,7 @@ pipeline {
         stage('Initialize') {
             steps {
                 slackSend color: 'good', message: "$JOB_NAME started new build $env.BUILD_NUMBER (<$BUILD_URL|Open>)", baseUrl: "$SLACK_BASE_URL", botUser: true, channel: 'jenkins', teamDomain: 'cherubits', tokenCredentialId: 'cherubits-slack-integration-token'
-                git([url: '${GIT_URL}', branch: '$GIT_BRANCH', changelog: true, credentialsId: 'jenkins-private-key', poll: true])
+                git([url: "${GIT_URL}", branch: "$GIT_BRANCH", changelog: true, credentialsId: 'jenkins-private-key', poll: true])
             }
         }
 
